@@ -5,7 +5,7 @@ module.exports = function(ctx) {
   return {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
-    boot: ["axios"],
+    boot: ["axios", "eosio"],
 
     css: ["app.styl"],
 
@@ -40,7 +40,7 @@ module.exports = function(ctx) {
         "QFabAction",
         "QDialog",
         "QInput",
-
+        "QCheckbox",
         "QCard",
         "QCardSection",
         "QCardActions"
@@ -49,7 +49,7 @@ module.exports = function(ctx) {
       directives: ["Ripple", "ClosePopup"],
 
       // Quasar plugins
-      plugins: ["Notify"]
+      plugins: ["Notify", "Loading"]
 
       // iconSet: 'ionicons-v4'
       // lang: 'de' // Quasar language

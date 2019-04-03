@@ -25,6 +25,7 @@
           <q-item
             v-for="event in events"
             :key="event.eventid"
+            @click="$router.push(`/event/${event.eventid}`)"
             clickable
             v-ripple
           >
@@ -94,7 +95,12 @@
           </q-card-section>
 
           <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Cancel" v-close-popup />
+            <q-btn
+              flat
+              label="Cancel"
+              @click="showNotification"
+              v-close-popup
+            />
             <q-btn flat label="Create" v-close-popup />
           </q-card-actions>
         </q-card>
@@ -160,6 +166,10 @@ export default {
     },
     showNotification() {
       this.$q.notify("Some other message");
+      this.$eos.derp();
+      this.$q.loading.show({
+        delay: 400 // ms
+      });
     }
   }
 };
