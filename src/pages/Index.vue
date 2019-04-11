@@ -7,7 +7,6 @@
             <div class="text-h6">Rockup!</div>
             <div class="text-subtitle2">by John Williamson & Marcel McFall</div>
           </q-card-section>
-
           <q-card-section>
             {{ about }}
           </q-card-section>
@@ -101,12 +100,16 @@
               @click="showNotification"
               v-close-popup
             />
-            <q-btn flat label="Create" v-close-popup />
+            <q-btn flat label="Create" @click="createEvent" v-close-popup />
           </q-card-actions>
         </q-card>
       </q-dialog>
 
-      <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-page-sticky
+        v-if="$eos.data.authed"
+        position="bottom-right"
+        :offset="[18, 18]"
+      >
         <q-btn fab icon="add" color="primary" @click="prompt = true" />
       </q-page-sticky>
     </div>
@@ -170,6 +173,32 @@ export default {
       this.$q.loading.show({
         delay: 400 // ms
       });
+    },
+    async createEvent() {
+      try {
+        await this.$eos.tx({
+          actions: [
+            {
+              account: "rockup",
+              name: "createevent",
+              authorization: [
+                {
+                  actor: this.$eos.data.accountName,
+                  permission: "active"
+                }
+              ],
+              data: {
+                owner: this.owner,
+                eventid: this.eventid,
+                stakeamt: this.EOS,
+                maxatt: this.maxatt
+              }
+            }
+          ]
+        });
+      } catch (e) {
+        this.prompt = true;
+      }
     }
   }
 };

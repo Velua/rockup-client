@@ -6927,10 +6927,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-ual-quasar-renderer@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/ual-quasar-renderer/-/ual-quasar-renderer-1.0.0.tgz#889140bf0f0dc785707d25db0ca730351516785a"
-  integrity sha512-7XfQyujQj5cWhGCDD9q29+1YGI4M7VarFcrG5D+2OoTLenVQZRT/VNGQqLiEpaDzpRAKpfM+9+9Zt4HsKzKQVg==
+ual-quasar-renderer@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/ual-quasar-renderer/-/ual-quasar-renderer-1.0.2.tgz#76b3d10440cde7b61095c0486b8929d4f3bbb306"
+  integrity sha512-Qz9UBNOHXDupptMhlBTLD/HwAUHy3GnF4aOKf+7Dd3UCzMHMC9hhKTmKurId5RzmTeMonLuqL/kkOZ5k+oKmxQ==
   dependencies:
     quasar "^1.0.0-beta.16"
     universal-authenticator-library "^0.1.0"

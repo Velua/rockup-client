@@ -104,7 +104,7 @@
         </q-card-section>
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="Cancel" @click="showNotification" v-close-popup />
-          <q-btn flat label="Create" v-close-popup />
+          <q-btn flat label="Reserve" @click="reserveTicket" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -174,11 +174,53 @@ export default {
         "Name must only contain characters a-z 1-5 and . No greater than 12 in length."
       );
     },
-    triggerRollCall() {
+    async triggerRollCall() {
       const went = this.selection;
       const all = this.attendees.map(({ ticketid }) => ticketid);
       const didntgo = all.filter(ticketid => !went.includes(ticketid));
       console.log({ went, didntgo });
+    },
+    async closeEvent() {},
+    async reserveTicket() {
+      try {
+        await this.$eos.tx({
+          actions: [
+            {
+              account: "rockup",
+              name: "reqticket",
+              authorization: [
+                {
+                  actor: this.$eos.data.accountName,
+                  permission: "active"
+                }
+              ],
+              data: {
+                attendee: this.attendee,
+                ticketid: this.ticketid,
+                eventid: this.eventid
+              }
+            },
+            {
+              account: "eosio.token",
+              name: "transfer",
+              authorization: [
+                {
+                  actor: this.$eos.data.accountName,
+                  permission: "active"
+                }
+              ],
+              data: {
+                from: this.$eos.data.accountName,
+                to: "rockup",
+                quantity: this.stakeamount,
+                memo: this.eventid
+              }
+            }
+          ]
+        });
+      } catch (e) {
+        this.prompt = true;
+      }
     }
   }
 };
