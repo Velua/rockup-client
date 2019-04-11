@@ -9,7 +9,7 @@
         <q-toolbar-title>
           Rockup.xyz
         </q-toolbar-title>
-        <div>By John Williamson & Marcel McFall</div>
+        <eosio-button></eosio-button>
       </q-toolbar>
     </q-header>
 
