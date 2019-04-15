@@ -21,12 +21,14 @@
       </div>
       <div class="col-xs-12 col-sm-6 col-md-8 ">
         <q-list>
+          <q-item-label header>Open Events</q-item-label>
           <q-item
-            v-for="event in events"
+            v-for="event in openEvents"
             :key="event.eventid"
             @click="$router.push(`/event/${event.eventid}`)"
             clickable
             v-ripple
+            :active="event.open"
           >
             <q-item-section>
               <q-item-label>{{ event.eventid }}</q-item-label>
@@ -38,7 +40,30 @@
                 >{{ event.att }}/{{ event.maxatt }} Tickets
                 Reserved</q-item-label
               >
-              <q-item-label caption>Host: {{ event.host }}</q-item-label>
+              <q-item-label caption>Host: {{ event.eventowner }}</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-separator spaced />
+          <q-item-label header>Past/Closed Events</q-item-label>
+          <q-item
+            v-for="event in closedEvents"
+            :key="event.eventid"
+            @click="$router.push(`/event/${event.eventid}`)"
+            clickable
+            v-ripple
+            :active="event.open"
+          >
+            <q-item-section>
+              <q-item-label>{{ event.eventid }}</q-item-label>
+              <q-item-label caption>{{ event.stakeamount }} Stake</q-item-label>
+            </q-item-section>
+
+            <q-item-section side top>
+              <q-item-label caption
+                >{{ event.att }}/{{ event.maxatt }} Tickets
+                Reserved</q-item-label
+              >
+              <q-item-label caption>Host: {{ event.eventowner }}</q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
@@ -119,30 +144,11 @@
 <style></style>
 
 <script>
-const defaultEvents = [
-  {
-    eventid: "ap41",
-    host: "thekellygang",
-    stakeamount: "5.0000 EOS",
-    att: 4,
-    maxatt: 6,
-    open: true
-  },
-  {
-    eventid: "whatever",
-    host: "marcel.x",
-    stakeamount: "10.0000 EOS",
-    att: 2,
-    maxatt: 8,
-    open: true
-  }
-];
-
 export default {
   name: "PageIndex",
   data: function() {
     return {
-      events: defaultEvents,
+      events: [],
       prompt: false,
       eventid: "",
       EOS: "",
@@ -151,6 +157,23 @@ export default {
       about:
         "Create free events which require an EOS stake, those who fail to rockup to the event lose their stake!"
     };
+  },
+  computed: {
+    openEvents: function() {
+      return this.events.filter(event => event.open);
+    },
+    closedEvents: function() {
+      return this.events.filter(event => !event.open);
+    }
+  },
+  created: async function() {
+    const result = await this.$rpc.get_table_rows({
+      code: "rockup",
+      table: "events",
+      scope: "rockup"
+    });
+    this.events = result.rows;
+    console.log(result.rows);
   },
   methods: {
     isEosioName(input) {
@@ -190,13 +213,14 @@ export default {
               data: {
                 owner: this.owner,
                 eventid: this.eventid,
-                stakeamt: this.EOS,
+                stakeamt: `${Number(this.EOS).toFixed(4)} EOS`,
                 maxatt: this.maxatt
               }
             }
           ]
         });
       } catch (e) {
+        console.log(e);
         this.prompt = true;
       }
     }

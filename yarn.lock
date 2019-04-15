@@ -2700,6 +2700,15 @@ eosjs@20.0.0-beta2:
     eosjs-ecc "^4.0.1"
     text-encoding "^0.6.4"
 
+eosjs@^20.0.0-beta3:
+  version "20.0.0-beta3"
+  resolved "https://registry.yarnpkg.com/eosjs/-/eosjs-20.0.0-beta3.tgz#b5a078d4627ad63343bae6897ea5952d2d4fd26d"
+  integrity sha512-Fr3zRFlEs1sLMGxIIsck0U4BnWlfivz8xf0Es4nT0pgWlGTiufrtmeyJvnjjspSPvyGxghZc+llcM3JI/1k9pw==
+  dependencies:
+    babel-runtime "^6.26.0"
+    eosjs-ecc "^4.0.1"
+    text-encoding "^0.6.4"
+
 errno@^0.1.3, errno@~0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/errno/-/errno-0.1.7.tgz#4684d71779ad39af177e3f007996f7c67c852618"
