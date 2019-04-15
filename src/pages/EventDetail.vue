@@ -281,7 +281,12 @@ export default {
                 eventid: this.eventid
               }
             },
-            {
+            
+          ]
+        });
+        await this.$eos.tx({
+          actions: [
+        {
               account: "eosio.token",
               name: "transfer",
               authorization: [
@@ -296,9 +301,7 @@ export default {
                 quantity: this.stakeamount,
                 memo: this.ticketid
               }
-            }
-          ]
-        });
+            }]})
         await this.fetchTableData();
       } catch (e) {
         this.prompt = true;
