@@ -42,8 +42,19 @@
             </q-item-section>
 
             <q-item-section side top>
-              <div class="text-h6" v-if="attendant.paid">Going</div>
-              <q-btn v-else color="primary" :label="Stake" />
+              <div class="text-h6" v-if="attendant.paid">
+                {{
+                  attendant.attendee == $eos.data.accountName
+                    ? `You're going`
+                    : `Going`
+                }}
+              </div>
+              <q-btn
+                v-else
+                color="primary"
+                :label="Stake"
+                @click="stakeTicket(attendant.ticketid)"
+              />
             </q-item-section>
           </q-item>
         </q-list>
@@ -143,6 +154,29 @@ export default {
     this.fetchTableData();
   },
   methods: {
+    async stakeTicket(ticketId) {
+      console.log("got ticket id", ticketId);
+      await this.$eos.tx({
+        actions: [
+          {
+            account: "eosio.token",
+            name: "transfer",
+            authorization: [
+              {
+                actor: this.$eos.data.accountName,
+                permission: "active"
+              }
+            ],
+            data: {
+              from: this.$eos.data.accountName,
+              to: process.env.CONTRACT,
+              quantity: this.stakeamount,
+              memo: ticketId
+            }
+          }
+        ]
+      });
+    },
     async fetchTableData() {
       try {
         const result = await this.$rpc.get_table_rows({
@@ -281,12 +315,7 @@ export default {
                 eventid: this.eventid
               }
             },
-            
-          ]
-        });
-        await this.$eos.tx({
-          actions: [
-        {
+            {
               account: "eosio.token",
               name: "transfer",
               authorization: [
@@ -301,7 +330,9 @@ export default {
                 quantity: this.stakeamount,
                 memo: this.ticketid
               }
-            }]})
+            }
+          ]
+        });
         await this.fetchTableData();
       } catch (e) {
         this.prompt = true;
