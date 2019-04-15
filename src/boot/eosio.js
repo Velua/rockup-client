@@ -3,21 +3,23 @@ import Eos from "ual-quasar-renderer";
 import { Notify, openURL } from "quasar";
 import { JsonRpc } from "eosjs";
 
+const { CHAIN_ID, PROTOCOL, HOST, PORT } = process.env;
+console.log(process.env);
 const myChain = {
-  chainId: "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f",
+  chainId: CHAIN_ID,
   rpcEndpoints: [
     {
-      protocol: "http",
-      host: "localhost",
-      port: "8888"
+      protocol: PROTOCOL,
+      host: HOST,
+      port: PORT
     }
   ]
 };
 
 const appName = "Rockup";
 const scatter = new Scatter([myChain], { appName });
-
-const rpc = new JsonRpc("http://localhost:8888");
+console.log(`${PROTOCOL}://${HOST}:${PORT}`);
+const rpc = new JsonRpc(`${PROTOCOL}://${HOST}:${PORT}`);
 
 export default ({ Vue }) => {
   Vue.use(Eos, {

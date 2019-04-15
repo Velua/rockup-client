@@ -28,7 +28,7 @@
             @click="$router.push(`/event/${event.eventid}`)"
             clickable
             v-ripple
-            :active="event.open"
+            :active="!!event.open"
           >
             <q-item-section>
               <q-item-label>{{ event.eventid }}</q-item-label>
@@ -51,7 +51,7 @@
             @click="$router.push(`/event/${event.eventid}`)"
             clickable
             v-ripple
-            :active="event.open"
+            :active="!!event.open"
           >
             <q-item-section>
               <q-item-label>{{ event.eventid }}</q-item-label>
