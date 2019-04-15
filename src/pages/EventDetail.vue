@@ -146,9 +146,9 @@ export default {
     async fetchTableData() {
       try {
         const result = await this.$rpc.get_table_rows({
-          code: "rockup",
+          code: process.env.CONTRACT,
           table: "events",
-          scope: "rockup"
+          scope: process.env.CONTRACT
         });
 
         const {
@@ -170,9 +170,9 @@ export default {
         this.open = open;
 
         const allTickets = await this.$rpc.get_table_rows({
-          code: "rockup",
+          code: process.env.CONTRACT,
           table: "tickets",
-          scope: "rockup"
+          scope: process.env.CONTRACT
         });
 
         const tickets = allTickets.rows.filter(
@@ -212,7 +212,7 @@ export default {
       console.log(list);
 
       const rollCallAction = ({ ticketId, attended }) => ({
-        account: "rockup",
+        account: process.env.CONTRACT,
         name: "rollcall",
         authorization: [
           {
@@ -242,7 +242,7 @@ export default {
         await this.$eos.tx({
           actions: [
             {
-              account: "rockup",
+              account: process.env.CONTRACT,
               name: "closeevent",
               authorization: [
                 {
@@ -267,7 +267,7 @@ export default {
         await this.$eos.tx({
           actions: [
             {
-              account: "rockup",
+              account: process.env.CONTRACT,
               name: "reqticket",
               authorization: [
                 {
@@ -292,7 +292,7 @@ export default {
               ],
               data: {
                 from: this.$eos.data.accountName,
-                to: "rockup",
+                to: process.env.CONTRACT,
                 quantity: this.stakeamount,
                 memo: this.ticketid
               }

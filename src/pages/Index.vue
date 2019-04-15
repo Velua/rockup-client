@@ -172,9 +172,9 @@ export default {
   methods: {
     async fetchTableData() {
       const result = await this.$rpc.get_table_rows({
-        code: "rockup",
+        code: process.env.CONTRACT,
         table: "events",
-        scope: "rockup"
+        scope: process.env.CONTRACT
       });
       this.events = result.rows;
     },
@@ -204,7 +204,7 @@ export default {
         await this.$eos.tx({
           actions: [
             {
-              account: "rockup",
+              account: process.env.CONTRACT,
               name: "createevent",
               authorization: [
                 {
