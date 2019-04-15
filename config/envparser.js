@@ -13,5 +13,7 @@ module.exports = function (isDevelopment) {
     }
   }
   return parsedEnv
+} else {
+  return process.env
 }
 }
