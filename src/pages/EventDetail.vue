@@ -5,21 +5,19 @@
         <q-card class="my-card bg-primary text-white col">
           <q-card-section>
             <div class="text-h6">{{ $route.params.id }}</div>
-            <div class="text-subtitle2">hosted by {{ host }}</div>
+            <div class="text-subtitle2">hosted by {{ eventowner }}</div>
           </q-card-section>
 
           <q-card-section>
-            <p>Seats Available: {{ att }} / {{ maxatt }}</p>
+            <p>Seats Reserved: {{ att }} / {{ maxatt }}</p>
             <p>Stake Amount: {{ stakeamount }}</p>
           </q-card-section>
 
           <!-- <q-separator dark /> -->
 
-          <q-card-actions v-if="eventopen">
+          <q-card-actions v-if="open">
             <q-btn color="amber" flat>Cancel</q-btn>
-            <q-btn color="standard" flat @click="eventopen = false"
-              >Close</q-btn
-            >
+            <q-btn color="standard" flat @click="closeEvent">Close</q-btn>
           </q-card-actions>
           <q-card-actions v-else>
             <q-btn color="amber" flat>Delete event</q-btn>
@@ -50,9 +48,13 @@
           </q-item>
         </q-list>
       </div>
-      <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-page-sticky
+        v-if="$eos.data.authed"
+        position="bottom-right"
+        :offset="[18, 18]"
+      >
         <q-btn
-          v-if="eventopen"
+          v-if="open"
           fab
           icon="add"
           color="primary"
@@ -119,40 +121,15 @@ export default {
   data: function() {
     return {
       rollcall: false,
-      eventopen: true,
+      open: true,
       selection: [],
       prompt: false,
-      attendees: [
-        {
-          ticketid: "ticket1",
-          attendee: "marcel.x",
-          eventid: "ap41",
-          paid: true
-        },
-        {
-          ticketid: "ticket2",
-          attendee: "johnn.y",
-          eventid: "ap41",
-          paid: true
-        },
-        {
-          ticketid: "ticket3",
-          attendee: "kingcoolcorv",
-          eventid: "ap41",
-          paid: true
-        },
-        {
-          ticketid: "ticket4",
-          attendee: "randomaccount",
-          eventid: "ap41",
-          paid: false
-        }
-      ],
-      eventid: "ap41",
-      host: "thekellygang",
-      att: 4,
-      stakeamount: "5.0000 EOS",
-      maxatt: 6,
+      attendees: [],
+      eventid: null,
+      eventowner: null,
+      att: null,
+      stakeamount: null,
+      maxatt: null,
       attendee: "",
       ticketid: ""
     };
@@ -162,7 +139,56 @@ export default {
       return "Stake";
     }
   },
+  created: async function() {
+    this.fetchTableData();
+  },
   methods: {
+    async fetchTableData() {
+      try {
+        const result = await this.$rpc.get_table_rows({
+          code: "rockup",
+          table: "events",
+          scope: "rockup"
+        });
+
+        const {
+          eventid,
+          stakeamount,
+          maxatt,
+          att,
+          eventowner,
+          open
+        } = result.rows.filter(
+          event => event.eventid === this.$route.params.id
+        )[0];
+
+        this.eventid = eventid;
+        this.eventowner = eventowner;
+        this.att = att;
+        this.stakeamount = stakeamount;
+        this.maxatt = maxatt;
+        this.open = open;
+
+        const allTickets = await this.$rpc.get_table_rows({
+          code: "rockup",
+          table: "tickets",
+          scope: "rockup"
+        });
+
+        const tickets = allTickets.rows.filter(
+          ticket => ticket.eventid === this.eventid
+        );
+        console.log(tickets);
+        this.attendees = tickets;
+      } catch (e) {
+        this.$q.notify({
+          message: "Fetching Event/Ticket data failed",
+          position: "bottom-right",
+          color: "negative",
+          icon: "error"
+        });
+      }
+    },
     showNotification() {
       this.$q.notify("Some other message");
     },
@@ -178,9 +204,64 @@ export default {
       const went = this.selection;
       const all = this.attendees.map(({ ticketid }) => ticketid);
       const didntgo = all.filter(ticketid => !went.includes(ticketid));
-      console.log({ went, didntgo });
+
+      const list = [
+        ...went.map(ticketId => ({ ticketId, attended: true })),
+        ...didntgo.map(ticketId => ({ ticketId, attended: false }))
+      ];
+      console.log(list);
+
+      const rollCallAction = ({ ticketId, attended }) => ({
+        account: "rockup",
+        name: "rollcall",
+        authorization: [
+          {
+            actor: this.$eos.data.accountName,
+            permission: "active"
+          }
+        ],
+        data: {
+          ticketid: ticketId,
+          attended
+        }
+      });
+
+      const actions = list.map(rollCallAction);
+      console.log(actions);
+      try {
+        await this.$eos.tx({
+          actions
+        });
+        await this.fetchTableData();
+      } catch (e) {
+        console.log("fff");
+      }
     },
-    async closeEvent() {},
+    async closeEvent() {
+      try {
+        await this.$eos.tx({
+          actions: [
+            {
+              account: "rockup",
+              name: "closeevent",
+              authorization: [
+                {
+                  actor: this.$eos.data.accountName,
+                  permission: "active"
+                }
+              ],
+              data: {
+                eventid: this.eventid
+              }
+            }
+          ]
+        });
+        await this.fetchTableData();
+        this.open = false;
+      } catch (e) {
+        console.log(e);
+      }
+    },
     async reserveTicket() {
       try {
         await this.$eos.tx({
@@ -213,11 +294,12 @@ export default {
                 from: this.$eos.data.accountName,
                 to: "rockup",
                 quantity: this.stakeamount,
-                memo: this.eventid
+                memo: this.ticketid
               }
             }
           ]
         });
+        await this.fetchTableData();
       } catch (e) {
         this.prompt = true;
       }

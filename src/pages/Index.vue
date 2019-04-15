@@ -167,15 +167,17 @@ export default {
     }
   },
   created: async function() {
-    const result = await this.$rpc.get_table_rows({
-      code: "rockup",
-      table: "events",
-      scope: "rockup"
-    });
-    this.events = result.rows;
-    console.log(result.rows);
+    await this.fetchTableData();
   },
   methods: {
+    async fetchTableData() {
+      const result = await this.$rpc.get_table_rows({
+        code: "rockup",
+        table: "events",
+        scope: "rockup"
+      });
+      this.events = result.rows;
+    },
     isEosioName(input) {
       return (
         new RegExp("^[a-z][a-z1-5.]{0,10}([a-z1-5]|^.)[a-j1-5]?$").test(
@@ -219,6 +221,7 @@ export default {
             }
           ]
         });
+        await this.fetchTableData();
       } catch (e) {
         console.log(e);
         this.prompt = true;
