@@ -14,6 +14,9 @@ module.exports = function (isDevelopment) {
   }
   return parsedEnv
 } else {
-  return process.env
+  return {
+    CONTRACT: "HELLO",
+    PROTOCOL: "NICE"
+  }
 }
 }
