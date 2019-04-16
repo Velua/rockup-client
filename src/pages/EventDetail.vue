@@ -93,7 +93,8 @@
           <div class="text-h6">Get Ticket</div>
           <div>
             I understand I will need to stake {{ stakeamount }} to attend this
-            event which will be returned back to me at roll call at the event.
+            event which will be returned back to me only if I am marked present
+            at the event.
           </div>
         </q-card-section>
 
@@ -122,7 +123,7 @@
           <q-input v-model="eventid" label="Event ID" readonly="" />
         </q-card-section>
         <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Cancel" @click="showNotification" v-close-popup />
+          <q-btn flat label="Cancel" v-close-popup />
           <q-btn flat label="Reserve" @click="reserveTicket" v-close-popup />
         </q-card-actions>
       </q-card>
@@ -149,7 +150,7 @@ export default {
       att: null,
       stakeamount: null,
       maxatt: null,
-      attendee: "",
+      attendee: this.$eos.data.accountName,
       ticketid: ""
     };
   },
@@ -234,9 +235,6 @@ export default {
         });
       }
     },
-    showNotification() {
-      this.$q.notify("Some other message");
-    },
     isEosioName(input) {
       return (
         new RegExp("^[a-z][a-z1-5.]{0,10}([a-z1-5]|^.)[a-j1-5]?$").test(
@@ -254,7 +252,6 @@ export default {
         ...went.map(ticketId => ({ ticketId, attended: true })),
         ...didntgo.map(ticketId => ({ ticketId, attended: false }))
       ];
-      console.log(list);
 
       const rollCallAction = ({ ticketId, attended }) => ({
         account: process.env.CONTRACT,

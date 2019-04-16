@@ -1,8 +1,7 @@
 import { Scatter } from "ual-scatter";
 import { Lynx } from "ual-lynx";
-import { TokenPocket } from 'ual-token-pocket'
-import { MeetOne } from 'ual-meetone'
-
+import { TokenPocket } from "ual-token-pocket";
+import { MeetOne } from "ual-meetone";
 
 import Eos from "ual-quasar-renderer";
 import { Notify, openURL } from "quasar";
@@ -24,10 +23,8 @@ const myChain = {
 const appName = "Rockup";
 const scatter = new Scatter([myChain], { appName });
 const lynx = new Lynx([myChain]);
-const tokenPocket = new TokenPocket([myChain])
-const meetOne = new MeetOne([myChain])
-
-
+const tokenPocket = new TokenPocket([myChain]);
+const meetOne = new MeetOne([myChain]);
 
 console.log(`${PROTOCOL}://${HOST}:${PORT}`);
 const rpc = new JsonRpc(`${PROTOCOL}://${HOST}:${PORT}`);

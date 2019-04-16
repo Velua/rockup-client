@@ -119,12 +119,7 @@
           </q-card-section>
 
           <q-card-actions align="right" class="text-primary">
-            <q-btn
-              flat
-              label="Cancel"
-              @click="showNotification"
-              v-close-popup
-            />
+            <q-btn flat label="Cancel" v-close-popup />
             <q-btn flat label="Create" @click="createEvent" v-close-popup />
           </q-card-actions>
         </q-card>
@@ -135,7 +130,7 @@
         position="bottom-right"
         :offset="[18, 18]"
       >
-        <q-btn fab icon="add" color="primary" @click="prompt = true" />
+        <q-btn fab icon="add" color="primary" @click="triggerPrompt" />
       </q-page-sticky>
 
       <q-dialog v-model="aboutPrompt">
@@ -252,6 +247,12 @@ export default {
     console.log("mounted");
   },
   methods: {
+    triggerPrompt() {
+      if (this.owner == "") {
+        this.owner = this.$eos.data.accountName;
+      }
+      this.prompt = true;
+    },
     async triggerDonate() {
       try {
         await this.$eos.tx({
@@ -299,13 +300,6 @@ export default {
     },
     isOverZero(input) {
       return input > 0 || "Must be greater than 0";
-    },
-    showNotification() {
-      this.$q.notify("Some other message");
-      this.$eos.derp();
-      this.$q.loading.show({
-        delay: 400 // ms
-      });
     },
     async createEvent() {
       try {
