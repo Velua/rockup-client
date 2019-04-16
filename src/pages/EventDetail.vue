@@ -328,8 +328,7 @@ export default {
             }
           ]
         });
-        await wait(1000);
-        await this.fetchTableData();
+        this.$router.push(`/`)
       } catch (e) {
         console.log(e);
       }
