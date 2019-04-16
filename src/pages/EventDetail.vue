@@ -304,7 +304,7 @@ export default {
           actions: [
             {
               account: process.env.CONTRACT,
-              name: "wipeevent",
+              name: "we",
               authorization: [
                 {
                   actor: this.$eos.data.accountName,
