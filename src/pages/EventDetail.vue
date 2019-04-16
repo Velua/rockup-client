@@ -13,17 +13,23 @@
             <p>Stake Amount: {{ stakeamount }}</p>
           </q-card-section>
 
-          <!-- <q-separator dark /> -->
+          <q-separator dark />
 
           <q-card-actions v-if="open">
-            <q-btn color="amber" flat>Cancel</q-btn>
+            <!-- <q-btn color="amber" flat>Cancel</q-btn> -->
             <q-btn color="standard" flat @click="closeEvent">Close</q-btn>
           </q-card-actions>
           <q-card-actions v-else>
-            <q-btn color="standard" v-if="ticketsExist" flat @click="rollcall = !rollcall"
+            <q-btn
+              color="standard"
+              v-if="ticketsExist"
+              flat
+              @click="rollcall = !rollcall"
               >Roll Call</q-btn
             >
-            <q-btn color="amber" v-else flat @click="deleteEvent">Delete event</q-btn>
+            <q-btn color="amber" v-else flat @click="deleteEvent"
+              >Delete event</q-btn
+            >
           </q-card-actions>
         </q-card>
       </div>
@@ -152,7 +158,7 @@ export default {
       return "Stake";
     },
     ticketsExist: function() {
-      return this.attendees.length
+      return this.attendees.length;
     }
   },
   created: async function() {
@@ -328,7 +334,7 @@ export default {
             }
           ]
         });
-        this.$router.push(`/`)
+        this.$router.push(`/`);
       } catch (e) {
         console.log(e);
       }

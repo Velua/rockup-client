@@ -11,12 +11,12 @@
             {{ about }}
           </q-card-section>
 
-          <!-- <q-separator dark /> -->
+          <q-separator dark />
 
-          <!-- <q-card-actions>
-            <q-btn flat>Action 1</q-btn>
-            <q-btn flat>Action 2</q-btn>
-          </q-card-actions> -->
+          <q-card-actions>
+            <q-btn flat @click="aboutPrompt = true">About</q-btn>
+            <q-btn flat @click="donatePrompt = true">Donate</q-btn>
+          </q-card-actions>
         </q-card>
       </div>
       <div class="col-xs-12 col-sm-6 col-md-8 ">
@@ -137,6 +137,79 @@
       >
         <q-btn fab icon="add" color="primary" @click="prompt = true" />
       </q-page-sticky>
+
+      <q-dialog v-model="aboutPrompt">
+        <q-card>
+          <q-card-section>
+            <div class="text-h6">What is Rockup?</div>
+          </q-card-section>
+
+          <q-card-section>
+            Free Meetups and events with limited seating space often use online
+            websites like Meetup.com to organise and distribute free tickets,
+            however, not everyone who collects a free ticket actually attends
+            the event.
+          </q-card-section>
+          <q-card-section>
+            By not attending a full event they have potentionally taken the seat
+            of someone who would have. Rockup.xyz allows hosts to organise an
+            event which requires a 'stake' in order to reserve a seat, at the
+            event the host performs a 'roll call' declaring who did and did not
+            attend the event.
+          </q-card-section>
+          <q-card-section>
+            Those who attended the event have their stake immediately returned,
+            those who fail to 'Rockup' forfeit their stake which instead sent to
+            the events host, perhaps to pay for pizza at the next event?
+          </q-card-section>
+
+          <q-card-actions align="right">
+            <q-btn flat label="OK" color="primary" v-close-popup />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+      <q-dialog v-model="donatePrompt">
+        <q-card>
+          <q-card-section>
+            <div class="text-h6">Donate</div>
+          </q-card-section>
+
+          <q-card-section>
+            This project is made with love and entirely free.
+          </q-card-section>
+          <q-card-section>
+            Donations will be evenly distributed between developers who take
+            part of the project based on their time and money spent making this
+            happen.
+          </q-card-section>
+          <q-card-section>
+            <q-input
+              v-model="donationAmount"
+              :rules="[isNotEmpty, isOverZero]"
+              :lazy-rules="true"
+              type="number"
+              suffix="EOS"
+              label="Donation Amount"
+            />
+          </q-card-section>
+          <q-card-section>
+            <q-input
+              v-model="donationMemo"
+              placeholder="Optional"
+              label="Memo"
+            />
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn
+              flat
+              label="OK"
+              color="primary"
+              @click="triggerDonate"
+              v-close-popup
+            />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
     </div>
   </q-page>
 </template>
@@ -150,6 +223,10 @@ export default {
   data: function() {
     return {
       events: [],
+      donationAmount: null,
+      donationMemo: "",
+      aboutPrompt: false,
+      donatePrompt: false,
       prompt: false,
       eventid: "",
       EOS: "",
@@ -168,9 +245,39 @@ export default {
     }
   },
   created: async function() {
+    console.log("created");
     await this.fetchTableData();
   },
+  mounted: async function() {
+    console.log("mounted");
+  },
   methods: {
+    async triggerDonate() {
+      try {
+        await this.$eos.tx({
+          actions: [
+            {
+              account: "eosio.token",
+              name: "transfer",
+              authorization: [
+                {
+                  actor: this.$eos.data.accountName,
+                  permission: "active"
+                }
+              ],
+              data: {
+                from: this.$eos.data.accountName,
+                to: "eosbrisban.e",
+                quantity: `${Number(this.EOS).toFixed(4)} EOS`,
+                memo: this.donationMemo || "Rockup.xyz Donation"
+              }
+            }
+          ]
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
     async fetchTableData() {
       const result = await this.$rpc.get_table_rows({
         code: process.env.CONTRACT,
