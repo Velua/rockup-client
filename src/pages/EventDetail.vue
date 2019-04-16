@@ -297,6 +297,7 @@ export default {
       }
     },
     async deleteEvent() {
+      console.log("delete event");
       await this.$eos.tx({
         actions: [
           {
