@@ -299,23 +299,28 @@ export default {
     async deleteEvent() {
       console.log("delete event");
       console.log(process.env.CONTRACT, this.$eos.data.accountName, this.eventid)
-      await this.$eos.tx({
-        actions: [
-          {
-            account: process.env.CONTRACT,
-            name: "wipeevent",
-            authorization: [
-              {
-                actor: this.$eos.data.accountName,
-                permission: "active"
+      try {
+        await this.$eos.tx({
+          actions: [
+            {
+              account: process.env.CONTRACT,
+              name: "wipeevent",
+              authorization: [
+                {
+                  actor: this.$eos.data.accountName,
+                  permission: "active"
+                }
+              ],
+              data: {
+                eventid: this.eventid
               }
-            ],
-            data: {
-              eventid: this.eventid
             }
-          }
-        ]
-      });
+          ]
+        });
+        await this.fetchTableData();
+      } catch (e) {
+        console.log(e);
+      }
     },
     async reserveTicket() {
       try {
