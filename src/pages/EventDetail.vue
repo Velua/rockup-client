@@ -20,7 +20,7 @@
             <q-btn color="standard" flat @click="closeEvent">Close</q-btn>
           </q-card-actions>
           <q-card-actions v-else>
-            <q-btn color="amber" flat>Delete event</q-btn>
+            <q-btn color="amber" flat @click="deleteEvent">Delete event</q-btn>
             <q-btn color="standard" flat @click="rollcall = !rollcall"
               >Roll Call</q-btn
             >
@@ -295,6 +295,25 @@ export default {
       } catch (e) {
         console.log(e);
       }
+    },
+    async deleteEvent() {
+      await this.$eos.tx({
+        actions: [
+          {
+            account: process.env.CONTRACT,
+            name: "wipeevent",
+            authorization: [
+              {
+                actor: this.$eos.data.accountName,
+                permission: "active"
+              }
+            ],
+            data: {
+              eventid: this.eventid
+            }
+          }
+        ]
+      });
     },
     async reserveTicket() {
       try {
