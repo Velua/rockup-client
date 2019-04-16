@@ -1221,6 +1221,11 @@ arraybuffer.slice@~0.0.7:
   resolved "https://registry.yarnpkg.com/arraybuffer.slice/-/arraybuffer.slice-0.0.7.tgz#3bbc4275dd584cc1b10809b89d4e8b63a69e7675"
   integrity sha512-wGUIVQXuehL5TCqQun8OW81jGzAWycqzFF8lFp+GOM5BXLYj3bKNsYC4daB7n6XjCqxQA/qgTJ+8ANR3acjrog==
 
+asap@~2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
+  integrity sha1-5QNHYR1+aQlDIIu9r+vLwvuGbUY=
+
 asn1.js@^4.0.0:
   version "4.10.1"
   resolved "https://registry.yarnpkg.com/asn1.js/-/asn1.js-4.10.1.tgz#b9c2bf5805f1e64aadeed6df3a2bfafb5a73f5a0"
@@ -5907,6 +5912,13 @@ promise-inflight@^1.0.1:
   resolved "https://registry.yarnpkg.com/promise-inflight/-/promise-inflight-1.0.1.tgz#98472870bf228132fcbdd868129bad12c3c029e3"
   integrity sha1-mEcocL8igTL8vdhoEputEsPAKeM=
 
+promise@^8.0.1:
+  version "8.0.3"
+  resolved "https://registry.yarnpkg.com/promise/-/promise-8.0.3.tgz#f592e099c6cddc000d538ee7283bb190452b0bf6"
+  integrity sha512-HeRDUL1RJiLhyA0/grn+PTShlBAcLuh/1BJGtrvjwbvRDCTLLMEz9rOGCV+R3vHY4MixIuoMEd9Yq/XvsTPcjw==
+  dependencies:
+    asap "~2.0.6"
+
 proxy-addr@~2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/proxy-addr/-/proxy-addr-2.0.4.tgz#ecfc733bf22ff8c6f407fa275327b9ab67e48b93"
@@ -7075,6 +7087,13 @@ toposort@^1.0.0:
   resolved "https://registry.yarnpkg.com/toposort/-/toposort-1.0.7.tgz#2e68442d9f64ec720b8cc89e6443ac6caa950029"
   integrity sha1-LmhELZ9k7HILjMieZEOsbKqVACk=
 
+tp-eosjs@^1.5.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/tp-eosjs/-/tp-eosjs-1.6.2.tgz#787823f38f6f71fc0980f84048c4803cb489c3f2"
+  integrity sha512-8JuqejDUQXOpmw1zl8RACiwvDMvoMQslAXPaTcT9imrQRMiyy3Td8StzyTvTZXfDWQ73RBt9QNQspOYJnGBKBw==
+  dependencies:
+    promise "^8.0.1"
+
 trim-right@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
@@ -7141,6 +7160,14 @@ ual-scatter@^0.1.0:
     eosjs-ecc "4.0.4"
     scatterjs-core "2.5.0"
     scatterjs-plugin-eosjs2 "^1.2.0"
+    universal-authenticator-library "0.1.0"
+
+ual-token-pocket@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/ual-token-pocket/-/ual-token-pocket-0.1.0.tgz#5125ab71069071c96ddcfe7356216238fd11df0e"
+  integrity sha512-2hqrgBHtZH8lGj+jNSzkb/JK+Dj+IxCqPZRF34Pzf9YcV2/Jmpgr7OQX3wZ/atMBLfEJCgbVerXN8gqgLkzPaA==
+  dependencies:
+    tp-eosjs "^1.5.2"
     universal-authenticator-library "0.1.0"
 
 uglify-js@3.4.x:

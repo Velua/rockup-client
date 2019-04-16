@@ -19,6 +19,7 @@
     "ual-lynx": "^0.1.0",
     "ual-quasar-renderer": "^1.0.2",
     "ual-scatter": "^0.1.0",
+    "ual-token-pocket": "^0.1.0",
     "waait": "^1.0.4"
   },
   "devDependencies": {

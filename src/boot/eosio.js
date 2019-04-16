@@ -1,5 +1,7 @@
 import { Scatter } from "ual-scatter";
 import { Lynx } from "ual-lynx";
+import { TokenPocket } from 'ual-token-pocket'
+
 
 import Eos from "ual-quasar-renderer";
 import { Notify, openURL } from "quasar";
@@ -21,6 +23,8 @@ const myChain = {
 const appName = "Rockup";
 const scatter = new Scatter([myChain], { appName });
 const lynx = new Lynx([myChain]);
+const tokenPocket = new TokenPocket([myChain])
+
 
 console.log(`${PROTOCOL}://${HOST}:${PORT}`);
 const rpc = new JsonRpc(`${PROTOCOL}://${HOST}:${PORT}`);
@@ -30,7 +34,7 @@ export default ({ Vue }) => {
     eosStore: new Eos.Store(
       [myChain],
       appName,
-      [scatter, lynx],
+      [scatter, lynx, tokenPocket],
       Vue,
       Notify,
       openURL
