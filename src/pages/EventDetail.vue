@@ -127,6 +127,8 @@
 <style></style>
 
 <script>
+import wait from "waait";
+
 export default {
   name: "PageIndex",
   data: function() {
@@ -266,6 +268,7 @@ export default {
         await this.$eos.tx({
           actions
         });
+        await wait(1000);
         await this.fetchTableData();
       } catch (e) {
         console.log("fff");
@@ -290,6 +293,7 @@ export default {
             }
           ]
         });
+        await wait(1000);
         await this.fetchTableData();
         this.open = false;
       } catch (e) {
@@ -298,7 +302,11 @@ export default {
     },
     async deleteEvent() {
       console.log("delete event");
-      console.log(process.env.CONTRACT, this.$eos.data.accountName, this.eventid)
+      console.log(
+        process.env.CONTRACT,
+        this.$eos.data.accountName,
+        this.eventid
+      );
       try {
         await this.$eos.tx({
           actions: [
@@ -317,6 +325,7 @@ export default {
             }
           ]
         });
+        await wait(1000);
         await this.fetchTableData();
       } catch (e) {
         console.log(e);
@@ -359,6 +368,7 @@ export default {
             }
           ]
         });
+        await wait(1000);
         await this.fetchTableData();
       } catch (e) {
         this.prompt = true;

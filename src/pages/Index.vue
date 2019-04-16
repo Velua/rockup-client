@@ -144,6 +144,7 @@
 <style></style>
 
 <script>
+import wait from "waait";
 export default {
   name: "PageIndex",
   data: function() {
@@ -221,6 +222,7 @@ export default {
             }
           ]
         });
+        await wait(1000);
         await this.fetchTableData();
       } catch (e) {
         console.log(e);
