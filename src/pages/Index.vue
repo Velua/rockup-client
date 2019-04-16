@@ -268,7 +268,7 @@ export default {
               data: {
                 from: this.$eos.data.accountName,
                 to: "eosbrisban.e",
-                quantity: `${Number(this.EOS).toFixed(4)} EOS`,
+                quantity: `${Number(this.donationAmount).toFixed(4)} EOS`,
                 memo: this.donationMemo || "Rockup.xyz Donation"
               }
             }
