@@ -298,6 +298,7 @@ export default {
     },
     async deleteEvent() {
       console.log("delete event");
+      console.log(process.env.CONTRACT, this.$eos.data.accountName, this.eventid)
       await this.$eos.tx({
         actions: [
           {
