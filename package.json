@@ -17,6 +17,7 @@
     "eosjs": "^20.0.0-beta3",
     "quasar": "^1.0.0-beta.0",
     "ual-lynx": "^0.1.0",
+    "ual-meetone": "^0.1.1",
     "ual-quasar-renderer": "^1.0.2",
     "ual-scatter": "^0.1.0",
     "ual-token-pocket": "^0.1.0",
