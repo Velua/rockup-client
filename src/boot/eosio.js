@@ -1,4 +1,6 @@
 import { Scatter } from "ual-scatter";
+import { Lynx } from "ual-lynx";
+
 import Eos from "ual-quasar-renderer";
 import { Notify, openURL } from "quasar";
 import { JsonRpc } from "eosjs";
@@ -18,12 +20,21 @@ const myChain = {
 
 const appName = "Rockup";
 const scatter = new Scatter([myChain], { appName });
+const lynx = new Lynx([myChain]);
+
 console.log(`${PROTOCOL}://${HOST}:${PORT}`);
 const rpc = new JsonRpc(`${PROTOCOL}://${HOST}:${PORT}`);
 
 export default ({ Vue }) => {
   Vue.use(Eos, {
-    eosStore: new Eos.Store([myChain], appName, [scatter], Vue, Notify, openURL)
+    eosStore: new Eos.Store(
+      [myChain],
+      appName,
+      [scatter, lynx],
+      Vue,
+      Notify,
+      openURL
+    )
   });
 
   Vue.prototype.$rpc = rpc;
