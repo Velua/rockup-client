@@ -20,10 +20,10 @@
             <q-btn color="standard" flat @click="closeEvent">Close</q-btn>
           </q-card-actions>
           <q-card-actions v-else>
-            <q-btn color="amber" flat @click="deleteEvent">Delete event</q-btn>
-            <q-btn color="standard" flat @click="rollcall = !rollcall"
+            <q-btn color="standard" v-if="ticketsExist" flat @click="rollcall = !rollcall"
               >Roll Call</q-btn
             >
+            <q-btn color="amber" v-else flat @click="deleteEvent">Delete event</q-btn>
           </q-card-actions>
         </q-card>
       </div>
@@ -150,6 +150,9 @@ export default {
   computed: {
     Stake: function() {
       return "Stake";
+    },
+    ticketsExist: function() {
+      return this.attendees.length
     }
   },
   created: async function() {
