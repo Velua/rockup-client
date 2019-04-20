@@ -167,7 +167,6 @@ export default {
   },
   methods: {
     async stakeTicket(ticketId) {
-      console.log("got ticket id", ticketId);
       await this.$eos.tx({
         actions: [
           {
