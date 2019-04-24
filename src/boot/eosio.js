@@ -8,7 +8,6 @@ import { Notify, openURL } from "quasar";
 import { JsonRpc } from "eosjs";
 
 const { CHAIN_ID, PROTOCOL, HOST, PORT } = process.env;
-console.log(process.env);
 const myChain = {
   chainId: CHAIN_ID,
   rpcEndpoints: [
