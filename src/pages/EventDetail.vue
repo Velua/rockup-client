@@ -182,11 +182,13 @@ export default {
               from: this.$eos.data.accountName,
               to: process.env.CONTRACT,
               quantity: this.stakeamount,
-              memo: ticketId
+              memo: `${ticketId}:${this.$route.params.id}`
             }
           }
         ]
       });
+      await wait(1000);
+      await this.fetchTableData();
     },
     async fetchTableData() {
       try {
@@ -217,7 +219,7 @@ export default {
         const allTickets = await this.$rpc.get_table_rows({
           code: process.env.CONTRACT,
           table: "tickets",
-          scope: process.env.CONTRACT
+          scope: this.$route.params.id
         });
 
         const tickets = allTickets.rows.filter(
@@ -263,12 +265,12 @@ export default {
         ],
         data: {
           ticketid: ticketId,
+          eventid: this.$route.params.id,
           attended
         }
       });
 
       const actions = list.map(rollCallAction);
-      console.log(actions);
       try {
         await this.$eos.tx({
           actions
@@ -367,7 +369,7 @@ export default {
                 from: this.$eos.data.accountName,
                 to: process.env.CONTRACT,
                 quantity: this.stakeamount,
-                memo: this.ticketid
+                memo: `${this.ticketid}:${this.eventid}`
               }
             }
           ]
