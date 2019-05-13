@@ -52,7 +52,18 @@
                 >{{ event.att }}/{{ event.maxatt }} Tickets
                 Reserved</q-item-label
               >
-              <q-item-label caption>Host: {{ event.eventowner }}</q-item-label>
+              <q-item-label caption>
+                <q-icon
+                  :name="event.inviteonly ? 'lock' : 'lock_open'"
+                  style="font-size: 1.5em"
+                />
+                Host:
+                {{
+                  event.eventowner == $eos.data.accountName
+                    ? "You"
+                    : event.eventowner
+                }}</q-item-label
+              >
             </q-item-section>
           </q-item>
           <q-separator spaced />
@@ -129,7 +140,9 @@
               :lazy-rules="true"
             />
           </q-card-section>
-
+          <q-card-section>
+            <q-checkbox v-model="inviteOnly" label="Invite only" />
+          </q-card-section>
           <q-card-actions align="right" class="text-primary">
             <q-btn flat label="Cancel" v-close-popup />
             <q-btn flat label="Create" @click="createEvent" v-close-popup />
@@ -241,6 +254,7 @@ export default {
       donatePrompt: false,
       prompt: false,
       eventid: "",
+      inviteOnly: false,
       EOS: "",
       maxatt: "",
       owner: "",
@@ -335,7 +349,8 @@ export default {
                 owner: this.owner,
                 eventid: this.eventid,
                 stakeamt: `${Number(this.EOS).toFixed(4)} EOS`,
-                maxatt: this.maxatt
+                maxatt: this.maxatt,
+                inviteonly: this.inviteOnly
               }
             }
           ]

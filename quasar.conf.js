@@ -44,7 +44,7 @@ module.exports = function(ctx) {
         "QCard",
         "QSeparator",
         "QCardSection",
-        "QCardActions"
+        "QCardActions",
       ],
 
       directives: ["Ripple", "ClosePopup"],

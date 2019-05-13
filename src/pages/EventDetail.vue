@@ -11,13 +11,26 @@
           <q-card-section>
             <p>Seats Reserved: {{ att }} / {{ maxatt }}</p>
             <p>Stake Amount: {{ stakeamount }}</p>
+            <p>
+              {{ inviteOnly ? "Invite Only" : "Open Event" }}
+              <q-icon
+                :name="inviteOnly ? 'lock' : 'lock_open'"
+                style="font-size: 2em"
+              />
+            </p>
           </q-card-section>
 
           <q-separator dark />
 
           <q-card-actions v-if="open">
             <!-- <q-btn color="amber" flat>Cancel</q-btn> -->
-            <q-btn color="standard" flat @click="closeEvent">Close</q-btn>
+            <q-btn
+              :disable="$eos.data.accountName !== eventowner"
+              color="standard"
+              flat
+              @click="closeEvent"
+              >Close</q-btn
+            >
           </q-card-actions>
           <q-card-actions v-else>
             <q-btn
@@ -66,7 +79,10 @@
         </q-list>
       </div>
       <q-page-sticky
-        v-if="$eos.data.authed"
+        v-if="
+          (inviteOnly && $eos.data.accountName == eventowner) ||
+            (!inviteOnly && $eos.data.authed)
+        "
         position="bottom-right"
         :offset="[18, 18]"
       >
@@ -204,7 +220,8 @@ export default {
           maxatt,
           att,
           eventowner,
-          open
+          open,
+          inviteonly
         } = result.rows.filter(
           event => event.eventid === this.$route.params.id
         )[0];
@@ -215,6 +232,7 @@ export default {
         this.stakeamount = stakeamount;
         this.maxatt = maxatt;
         this.open = open;
+        this.inviteOnly = inviteonly;
 
         const allTickets = await this.$rpc.get_table_rows({
           code: process.env.CONTRACT,
