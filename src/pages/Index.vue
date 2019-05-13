@@ -16,11 +16,18 @@
           <q-card-actions>
             <q-btn flat @click="aboutPrompt = true">About</q-btn>
             <q-btn flat @click="donatePrompt = true">Donate</q-btn>
+            <q-btn flat @click="fetchTableData">Refresh</q-btn>
           </q-card-actions>
         </q-card>
       </div>
       <div class="col-xs-12 col-sm-6 col-md-8 ">
-        <q-list>
+        <q-card v-if="openEvents.length == 0 && closedEvents.length == 0">
+          <q-card-section>
+            <div class="text-h6">No events!</div>
+            <div class="text">Login and press the plus icon to host one.</div>
+          </q-card-section>
+        </q-card>
+        <q-list v-else>
           <q-item-label header>Open Events</q-item-label>
           <q-item
             v-for="event in openEvents"
@@ -157,7 +164,21 @@
             those who fail to 'Rockup' forfeit their stake which instead sent to
             the events host, perhaps to pay for pizza at the next event?
           </q-card-section>
-
+          <q-card-section>
+            <div class="text-h6">Credits</div>
+            <ul>
+              <li>
+                <a href="https://johnwilliamson.io" target="_blank"
+                  >John Williamson</a
+                >
+              </li>
+              <li>
+                <a href="https://github.com/mcf21" target="_blank"
+                  >Marcel McFall</a
+                >
+              </li>
+            </ul>
+          </q-card-section>
           <q-card-actions align="right">
             <q-btn flat label="OK" color="primary" v-close-popup />
           </q-card-actions>
