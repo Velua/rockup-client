@@ -2,7 +2,7 @@
   "name": "rockup-client",
   "version": "0.0.1",
   "description": "Stake EOS to attend free events, EOS returned at the event.",
-  "productName": "Rockup, EOS dApp",
+  "productName": "Rockup!",
   "cordovaId": "org.cordova.quasar.app",
   "author": "John Williamson <johnjwilliamson@live.com>",
   "private": true,
