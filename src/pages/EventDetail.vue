@@ -77,6 +77,31 @@
             </q-item-section>
           </q-item>
         </q-list>
+        <q-separator v-if="staleTickets.length > 0" />
+        <div v-if="staleTickets.length > 0">
+          <div class="text-h6">Stale Tickets</div>
+          <div class="text">
+            Tickets that weren't staked for and event is now finished may be
+            cleared from RAM.
+          </div>
+          <q-btn label="Clear all" color="primary" @click="clearAll" />
+          <q-list>
+            <q-item v-for="attendant in staleTickets" :key="attendant.ticketid">
+              <q-item-section>
+                <q-item-label>{{ attendant.attendee }}</q-item-label>
+                <q-item-label caption>{{ attendant.ticketid }}</q-item-label>
+              </q-item-section>
+
+              <q-item-section side top>
+                <q-btn
+                  color="primary"
+                  label="Clear"
+                  @click="clearTicket(attendant.ticketid)"
+                />
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </div>
       </div>
       <q-page-sticky
         v-if="
@@ -170,6 +195,8 @@ export default {
       rollcall: false,
       open: true,
       selection: [],
+      staleTickets: [],
+      inviteOnly: null,
       prompt: false,
       payForTicket: false,
       attendees: [],
@@ -194,6 +221,36 @@ export default {
     this.fetchTableData();
   },
   methods: {
+    async clearTicket(ticketid) {
+      await this.$eos.tx({
+        actions: [
+          {
+            account: process.env.CONTRACT,
+            name: "wipeticket",
+            authorization: [
+              {
+                actor: this.$eos.data.accountName,
+                permission: "active"
+              }
+            ],
+            data: {
+              eventid: this.eventid,
+              ticketid
+            }
+          }
+        ]
+      });
+      await wait(1000);
+      await this.fetchTableData();
+    },
+    async clearAll() {
+      for (var i = 0; i < this.staleTickets.length; i++) {
+        console.log(this.staleTickets[i], "was attempt");
+        await this.clearTicket(this.staleTickets[i].ticketid);
+      }
+      await wait(1000);
+      await this.fetchTableData();
+    },
     async stakeTicket(ticketId) {
       await this.$eos.tx({
         actions: [
@@ -257,6 +314,10 @@ export default {
         );
         console.log(tickets);
         this.attendees = tickets;
+        if (!open) {
+          this.staleTickets = this.attendees.filter(ticket => !ticket.paid);
+          this.attendees = this.attendees.filter(ticket => ticket.paid);
+        }
       } catch (e) {
         this.$q.notify({
           message: "Fetching Event/Ticket data failed",
