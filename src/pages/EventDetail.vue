@@ -138,6 +138,17 @@
         <q-card-section>
           <q-input v-model="eventid" label="Event ID" readonly="" />
         </q-card-section>
+        <q-card-section>
+          <q-checkbox
+            v-model="payForTicket"
+            :label="
+              attendee == $eos.data.accountName
+                ? `Stake ${stakeamount} for my ticket now`
+                : `Stake my own EOS for attendee ${attendee}`
+            "
+            readonly=""
+          />
+        </q-card-section>
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="Cancel" v-close-popup />
           <q-btn flat label="Reserve" @click="reserveTicket" v-close-popup />
@@ -160,6 +171,7 @@ export default {
       open: true,
       selection: [],
       prompt: false,
+      payForTicket: false,
       attendees: [],
       eventid: null,
       eventowner: null,
@@ -356,41 +368,46 @@ export default {
       }
     },
     async reserveTicket() {
+      const actions = [
+        {
+          account: process.env.CONTRACT,
+          name: "reqticket",
+          authorization: [
+            {
+              actor: this.$eos.data.accountName,
+              permission: "active"
+            }
+          ],
+          data: {
+            attendee: this.attendee,
+            ticketid: this.ticketid,
+            eventid: this.eventid
+          }
+        }
+      ];
+
+      if (this.payForTicket) {
+        actions.push({
+          account: "eosio.token",
+          name: "transfer",
+          authorization: [
+            {
+              actor: this.$eos.data.accountName,
+              permission: "active"
+            }
+          ],
+          data: {
+            from: this.$eos.data.accountName,
+            to: process.env.CONTRACT,
+            quantity: this.stakeamount,
+            memo: `${this.ticketid}:${this.eventid}`
+          }
+        });
+      }
+
       try {
         await this.$eos.tx({
-          actions: [
-            {
-              account: process.env.CONTRACT,
-              name: "reqticket",
-              authorization: [
-                {
-                  actor: this.$eos.data.accountName,
-                  permission: "active"
-                }
-              ],
-              data: {
-                attendee: this.attendee,
-                ticketid: this.ticketid,
-                eventid: this.eventid
-              }
-            },
-            {
-              account: "eosio.token",
-              name: "transfer",
-              authorization: [
-                {
-                  actor: this.$eos.data.accountName,
-                  permission: "active"
-                }
-              ],
-              data: {
-                from: this.$eos.data.accountName,
-                to: process.env.CONTRACT,
-                quantity: this.stakeamount,
-                memo: `${this.ticketid}:${this.eventid}`
-              }
-            }
-          ]
+          actions
         });
         await wait(1000);
         await this.fetchTableData();
