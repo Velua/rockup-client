@@ -15,7 +15,12 @@
 
           <q-card-actions>
             <q-btn flat @click="aboutPrompt = true">About</q-btn>
-            <q-btn flat @click="donatePrompt = true">Donate</q-btn>
+            <q-btn
+              flat
+              :disable="!$eos.data.authed"
+              @click="donatePrompt = true"
+              >Donate</q-btn
+            >
             <q-btn flat @click="fetchTableData">Refresh</q-btn>
           </q-card-actions>
         </q-card>
@@ -145,7 +150,6 @@
           <q-card-section>
             <div class="text-h6">What is Rockup?</div>
           </q-card-section>
-
           <q-card-section>
             Free Meetups and events with limited seating space often use online
             websites like Meetup.com to organise and distribute free tickets,
@@ -208,13 +212,6 @@
               label="Donation Amount"
             />
           </q-card-section>
-          <q-card-section>
-            <q-input
-              v-model="donationMemo"
-              placeholder="Optional"
-              label="Memo"
-            />
-          </q-card-section>
           <q-card-actions align="right">
             <q-btn
               flat
@@ -240,7 +237,6 @@ export default {
     return {
       events: [],
       donationAmount: null,
-      donationMemo: "",
       aboutPrompt: false,
       donatePrompt: false,
       prompt: false,
@@ -289,9 +285,9 @@ export default {
               ],
               data: {
                 from: this.$eos.data.accountName,
-                to: "eosbrisban.e",
+                to: "arbarotokenn",
                 quantity: `${Number(this.donationAmount).toFixed(4)} EOS`,
-                memo: this.donationMemo || "Rockup.xyz Donation"
+                memo: "ROC:4"
               }
             }
           ]
