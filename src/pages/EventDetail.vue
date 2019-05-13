@@ -244,9 +244,9 @@ export default {
       await this.fetchTableData();
     },
     async clearAll() {
-      for (var i = 0; i < this.staleTickets.length; i++) {
-        console.log(this.staleTickets[i], "was attempt");
-        await this.clearTicket(this.staleTickets[i].ticketid);
+      const staleTickets = this.staleTickets;
+      for (var i = 0; i < staleTickets.length; i++) {
+        await this.clearTicket(staleTickets[i].ticketid);
       }
       await wait(1000);
       await this.fetchTableData();
