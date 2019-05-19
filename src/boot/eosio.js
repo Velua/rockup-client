@@ -25,7 +25,6 @@ const lynx = new Lynx([myChain]);
 const tokenPocket = new TokenPocket([myChain]);
 const meetOne = new MeetOne([myChain]);
 
-console.log(`${PROTOCOL}://${HOST}:${PORT}`);
 const rpc = new JsonRpc(`${PROTOCOL}://${HOST}:${PORT}`);
 
 export default ({ Vue }) => {

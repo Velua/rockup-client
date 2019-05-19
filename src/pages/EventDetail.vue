@@ -18,6 +18,7 @@
                 style="font-size: 2em"
               />
             </p>
+            <p>{{ about }}</p>
           </q-card-section>
 
           <q-separator dark />
@@ -206,7 +207,8 @@ export default {
       stakeamount: null,
       maxatt: null,
       attendee: this.$eos.data.accountName,
-      ticketid: ""
+      ticketid: "",
+      about: ""
     };
   },
   computed: {
@@ -325,6 +327,23 @@ export default {
           color: "negative",
           icon: "error"
         });
+      }
+
+      try {
+        const data = await this.$dfuse.searchTransactions(
+          `receiver:rockup.xyz event.event:abdc`,
+          {
+            limit: 10,
+            withReversible: true,
+            sort: "desc"
+          }
+        );
+        const about =
+          data.transactions[0].lifecycle.execution_trace.action_traces[0].act
+            .data.about;
+        this.about = about;
+      } catch (e) {
+        console.log(e.message);
       }
     },
     isEosioName(input) {
