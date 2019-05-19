@@ -143,6 +143,13 @@
           <q-card-section>
             <q-checkbox v-model="inviteOnly" label="Invite only" />
           </q-card-section>
+          <q-card-section>
+            <q-input
+              v-model="aboutMemo"
+              label="About"
+              placeholder="Optional information about the event."
+            />
+          </q-card-section>
           <q-card-actions align="right" class="text-primary">
             <q-btn flat label="Cancel" v-close-popup />
             <q-btn flat label="Create" @click="createEvent" v-close-popup />
@@ -254,6 +261,7 @@ export default {
       donatePrompt: false,
       prompt: false,
       eventid: "",
+      aboutMemo: "",
       inviteOnly: false,
       EOS: "",
       maxatt: "",
@@ -350,7 +358,8 @@ export default {
                 eventid: this.eventid,
                 stakeamt: `${Number(this.EOS).toFixed(4)} EOS`,
                 maxatt: this.maxatt,
-                inviteonly: this.inviteOnly
+                inviteonly: this.inviteOnly,
+                about: this.aboutMemo
               }
             }
           ]
