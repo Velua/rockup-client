@@ -117,8 +117,8 @@
               :lazy-rules="true"
               type="number"
               suffix="EOS"
-              label="EOS Stake"
-              placeholder="Required amount of EOS staked to reserve ticket E.g. 5"
+              label="EOS Stake Requirement"
+              hint="Required amount of EOS staked to reserve ticket E.g. 5"
             />
           </q-card-section>
           <q-card-section>
@@ -127,14 +127,15 @@
               :rules="[isOverZero]"
               :lazy-rules="true"
               type="number"
-              label="Max attendance"
+              label="Maxium amount of tickets"
               placeholder="15"
             />
           </q-card-section>
           <q-card-section>
             <q-input
               v-model="eventid"
-              label="Event ID"
+              label="Event Name"
+              hint="Must be unique"
               placeholder="ap41"
               :rules="[isEosioName]"
               :lazy-rules="true"

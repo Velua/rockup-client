@@ -13,12 +13,15 @@
             <p>Stake Amount: {{ stakeamount }}</p>
             <p>
               {{ inviteOnly ? "Invite Only" : "Open Event" }}
-              <q-icon :name="inviteOnly ? 'lock' : 'lock_open'" style="font-size: 2em"/>
+              <q-icon
+                :name="inviteOnly ? 'lock' : 'lock_open'"
+                style="font-size: 2em"
+              />
             </p>
             <p>{{ about }}</p>
           </q-card-section>
 
-          <q-separator dark/>
+          <q-separator dark />
 
           <q-card-actions v-if="open">
             <!-- <q-btn color="amber" flat>Cancel</q-btn> -->
@@ -27,18 +30,32 @@
               color="standard"
               flat
               @click="closeEvent"
-            >Close</q-btn>
+              >Close</q-btn
+            >
           </q-card-actions>
           <q-card-actions v-else>
-            <q-btn color="standard" v-if="ticketsExist" flat @click="rollcall = !rollcall">Roll Call</q-btn>
-            <q-btn color="amber" v-else flat @click="deleteEvent">Delete event</q-btn>
+            <q-btn
+              color="standard"
+              v-if="ticketsExist"
+              flat
+              @click="rollcall = !rollcall"
+              >Roll Call</q-btn
+            >
+            <q-btn color="amber" v-else flat @click="deleteEvent"
+              >Delete event</q-btn
+            >
           </q-card-actions>
         </q-card>
       </div>
       <div class="col-xs-12 col-sm-6 col-md-8">
         <q-list>
           <q-item v-for="attendant in attendees" :key="attendant.ticketid">
-            <q-checkbox v-if="rollcall" v-model="selection" :val="attendant.ticketid" color="blue"/>
+            <q-checkbox
+              v-if="rollcall"
+              v-model="selection"
+              :val="attendant.ticketid"
+              color="blue"
+            />
             <q-item-section>
               <q-item-label>{{ attendant.attendee }}</q-item-label>
               <q-item-label caption>{{ attendant.ticketid }}</q-item-label>
@@ -47,9 +64,9 @@
             <q-item-section side top>
               <div class="text-h6" v-if="attendant.paid">
                 {{
-                attendant.attendee == $eos.data.accountName
-                ? `You're going`
-                : `Going`
+                  attendant.attendee == $eos.data.accountName
+                    ? `You're going`
+                    : `Going`
                 }}
               </div>
               <q-btn
@@ -61,14 +78,14 @@
             </q-item-section>
           </q-item>
         </q-list>
-        <q-separator v-if="staleTickets.length > 0"/>
+        <q-separator v-if="staleTickets.length > 0" />
         <div v-if="staleTickets.length > 0">
           <div class="text-h6">Stale Tickets</div>
           <div class="text">
             Tickets that weren't staked for and event is now finished may be
             cleared from RAM.
           </div>
-          <q-btn label="Clear all" color="primary" @click="clearAll"/>
+          <q-btn label="Clear all" color="primary" @click="clearAll" />
           <q-list>
             <q-item v-for="attendant in staleTickets" :key="attendant.ticketid">
               <q-item-section>
@@ -77,7 +94,11 @@
               </q-item-section>
 
               <q-item-section side top>
-                <q-btn color="primary" label="Clear" @click="clearTicket(attendant.ticketid)"/>
+                <q-btn
+                  color="primary"
+                  label="Clear"
+                  @click="clearTicket(attendant.ticketid)"
+                />
               </q-item-section>
             </q-item>
           </q-list>
@@ -91,8 +112,20 @@
         position="bottom-right"
         :offset="[18, 18]"
       >
-        <q-btn v-if="open" fab icon="add" color="primary" @click="prompt = true"/>
-        <q-btn v-if="rollcall" fab icon="done" color="positive" @click="triggerRollCall"/>
+        <q-btn
+          v-if="open"
+          fab
+          icon="add"
+          color="primary"
+          @click="prompt = true"
+        />
+        <q-btn
+          v-if="rollcall"
+          fab
+          icon="done"
+          color="positive"
+          @click="triggerRollCall"
+        />
       </q-page-sticky>
     </div>
 
@@ -124,12 +157,12 @@
             v-model="ticketid"
             :rules="[isEosioName]"
             :lazy-rules="true"
-            label="Ticket ID"
-            placeholder="Random text OK"
+            label="Name on ticket"
+            placeholder="E.g. john"
           />
         </q-card-section>
         <q-card-section>
-          <q-input v-model="eventid" label="Event ID" readonly/>
+          <q-input v-model="eventid" label="Event ID" readonly />
         </q-card-section>
         <q-card-section>
           <q-checkbox
@@ -143,8 +176,8 @@
           />
         </q-card-section>
         <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Cancel" v-close-popup/>
-          <q-btn flat label="Reserve" @click="reserveTicket" v-close-popup/>
+          <q-btn flat label="Cancel" v-close-popup />
+          <q-btn flat label="Reserve" @click="reserveTicket" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
