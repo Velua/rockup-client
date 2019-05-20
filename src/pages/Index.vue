@@ -173,7 +173,7 @@
             />
           </q-card-section>
           <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Cancel" @click="print" v-close-popup />
+            <q-btn flat label="Cancel"  v-close-popup />
             <q-btn flat label="Create" @click="createEvent" v-close-popup />
           </q-card-actions>
         </q-card>
@@ -309,15 +309,6 @@ export default {
     await this.fetchTableData();
   },
   methods: {
-    print() {
-      console.log(this.eventDate);
-      console.log(this.eventTime);
-      const m = moment(
-        `${this.eventDate} ${this.eventTime}`,
-        "YYYY/MM/DD HH:mm"
-      );
-      console.log(m.unix());
-    },
     triggerPrompt() {
       if (this.owner == "") {
         this.owner = this.$eos.data.accountName;
