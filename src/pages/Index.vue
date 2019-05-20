@@ -136,7 +136,7 @@
               v-model="eventid"
               label="Name of event"
               hint="Must be unique"
-              placeholder="ap41"
+              placeholder="mymeetup1"
               :rules="[isEosioName]"
               :lazy-rules="true"
             />
@@ -152,7 +152,7 @@
             />
           </q-card-section>
           <q-card-section>
-            <p>UTC Time</p>
+            <p>Time of Event (In UTC)</p>
             <q-date
               v-model="eventDate"
               mask="YYYY-MM-DD HH:mm"
