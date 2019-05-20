@@ -45,6 +45,8 @@ module.exports = function(ctx) {
         "QSeparator",
         "QCardSection",
         "QCardActions",
+        "QDate",
+        "QTime"
       ],
 
       directives: ["Ripple", "ClosePopup"],

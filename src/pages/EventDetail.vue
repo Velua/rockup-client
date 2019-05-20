@@ -9,6 +9,17 @@
           </q-card-section>
 
           <q-card-section>
+            <p>
+              When: {{ eventDate.format("dddd, MMMM Do YYYY, h:mm:ss a") }} ({{
+                eventDate.fromNow()
+              }})
+            </p>
+            <p>
+              Withdrawal Cutoff:
+              {{ deadline.format("dddd, MMMM Do YYYY, h:mm:ss a") }} ({{
+                deadline.fromNow()
+              }})
+            </p>
             <p>Seats Reserved: {{ att }} / {{ maxatt }}</p>
             <p>Stake Amount: {{ stakeamount }}</p>
             <p>
@@ -63,11 +74,19 @@
 
             <q-item-section side top>
               <div class="text-h6" v-if="attendant.paid">
-                {{
-                  attendant.attendee == $eos.data.accountName
-                    ? `You're going`
-                    : `Going`
-                }}
+                <span v-if="deadlinePassed">
+                  {{
+                    attendant.attendee == $eos.data.accountName
+                      ? `You're going`
+                      : `Going`
+                  }}
+                </span>
+                <q-btn
+                  v-else
+                  color="primary"
+                  label="Withdraw"
+                  @click="withdraw(attendant.ticketid)"
+                />
               </div>
               <q-btn
                 v-else
@@ -188,6 +207,7 @@
 
 <script>
 import wait from "waait";
+import moment from "moment";
 
 export default {
   name: "PageIndex",
@@ -202,6 +222,8 @@ export default {
       payForTicket: false,
       attendees: [],
       eventid: null,
+      eventDate: null,
+      deadline: null,
       eventowner: null,
       att: null,
       stakeamount: null,
@@ -223,6 +245,9 @@ export default {
     this.fetchTableData();
   },
   methods: {
+    async withdraw(ticketid) {
+      await this.clearTicket(ticketid);
+    },
     async clearTicket(ticketid) {
       await this.$eos.tx({
         actions: [
@@ -292,7 +317,9 @@ export default {
           att,
           eventowner,
           open,
-          inviteonly
+          inviteonly,
+          etime,
+          grace
         } = result.rows.filter(
           event => event.eventid === this.$route.params.id
         )[0];
@@ -304,6 +331,13 @@ export default {
         this.maxatt = maxatt;
         this.open = open;
         this.inviteOnly = inviteonly;
+
+        const eventDate = moment.unix(etime);
+        const deadline = eventDate.clone().subtract(grace, "seconds");
+
+        this.eventDate = eventDate;
+        this.deadline = deadline;
+        this.deadlinePassed = deadline.isBefore(moment());
 
         const allTickets = await this.$rpc.get_table_rows({
           code: process.env.CONTRACT,

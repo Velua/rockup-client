@@ -134,7 +134,7 @@
           <q-card-section>
             <q-input
               v-model="eventid"
-              label="Event Name"
+              label="Name of event"
               hint="Must be unique"
               placeholder="ap41"
               :rules="[isEosioName]"
@@ -151,8 +151,29 @@
               placeholder="Optional information about the event."
             />
           </q-card-section>
+          <q-card-section>
+            <p>UTC Time</p>
+            <q-date
+              v-model="eventDate"
+              mask="YYYY-MM-DD HH:mm"
+              color="primary"
+            />
+            <q-time
+              v-model="eventTime"
+              mask="YYYY-MM-DD HH:mm"
+              color="primary"
+            />
+          </q-card-section>
+          <q-card-section>
+            <q-input
+              v-model="gracePeriod"
+              type="number"
+              label="Grace Period"
+              hint="Amount of hours a ticket holder can withdraw before an event"
+            />
+          </q-card-section>
           <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Cancel" v-close-popup />
+            <q-btn flat label="Cancel" @click="print" v-close-popup />
             <q-btn flat label="Create" @click="createEvent" v-close-popup />
           </q-card-actions>
         </q-card>
@@ -252,6 +273,7 @@
 
 <script>
 import wait from "waait";
+import moment from "moment";
 export default {
   name: "PageIndex",
   data: function() {
@@ -265,6 +287,10 @@ export default {
       aboutMemo: "",
       inviteOnly: false,
       EOS: "",
+      eventDate: null,
+      eventTime: null,
+      gracePeriod: null,
+      isUtc: false,
       maxatt: "",
       owner: "",
       about:
@@ -280,13 +306,18 @@ export default {
     }
   },
   created: async function() {
-    console.log("created");
     await this.fetchTableData();
   },
-  mounted: async function() {
-    console.log("mounted");
-  },
   methods: {
+    print() {
+      console.log(this.eventDate);
+      console.log(this.eventTime);
+      const m = moment(
+        `${this.eventDate} ${this.eventTime}`,
+        "YYYY/MM/DD HH:mm"
+      );
+      console.log(m.unix());
+    },
     triggerPrompt() {
       if (this.owner == "") {
         this.owner = this.$eos.data.accountName;
@@ -343,6 +374,11 @@ export default {
     },
     async createEvent() {
       try {
+        const etime = moment(
+          `${this.eventDate} ${this.eventTime}`,
+          "YYYY/MM/DD HH:mm"
+        ).unix();
+
         await this.$eos.tx({
           actions: [
             {
@@ -360,7 +396,9 @@ export default {
                 stakeamt: `${Number(this.EOS).toFixed(4)} EOS`,
                 maxatt: this.maxatt,
                 inviteonly: this.inviteOnly,
-                about: this.aboutMemo
+                about: this.aboutMemo,
+                grace: Number(this.gracePeriod) * 60 * 60,
+                etime
               }
             }
           ]
