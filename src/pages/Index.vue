@@ -152,7 +152,7 @@
             />
           </q-card-section>
           <q-card-section>
-            <p>Time of Event (In UTC)</p>
+            <p>Time of Event</p>
             <q-date
               v-model="eventDate"
               mask="YYYY-MM-DD HH:mm"
@@ -173,7 +173,7 @@
             />
           </q-card-section>
           <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Cancel"  v-close-popup />
+            <q-btn flat label="Cancel" v-close-popup />
             <q-btn flat label="Create" @click="createEvent" v-close-popup />
           </q-card-actions>
         </q-card>
