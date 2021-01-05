@@ -14,7 +14,7 @@
   "dependencies": {
     "@dfuse/client": "^0.2.5",
     "@quasar/extras": "^1.0.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "eosjs": "^20.0.0-beta3",
     "moment": "^2.24.0",
     "quasar": "^1.0.0-beta.0",
